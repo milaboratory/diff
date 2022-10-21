@@ -85,6 +85,7 @@ type Differ struct {
 	StructMapKeys          bool
 	FlattenEmbeddedStructs bool
 	ConvertCompatibleTypes bool
+	ComparePrivateFields   bool
 	Filter                 FilterFunc
 }
 
@@ -414,4 +415,14 @@ func copyAppend(src []string, elems ...string) []string {
 		dst[i] = elems[i-len(src)]
 	}
 	return dst
+}
+
+func isUnsafeInterface(kind reflect.Kind) bool {
+	return kind == reflect.Invalid ||
+		kind == reflect.Uintptr ||
+		kind == reflect.Chan ||
+		kind == reflect.Func ||
+		kind == reflect.Interface ||
+		kind == reflect.Pointer ||
+		kind == reflect.UnsafePointer
 }

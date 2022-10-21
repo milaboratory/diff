@@ -8,6 +8,16 @@ func ConvertCompatibleTypes() func(d *Differ) error {
 	}
 }
 
+// ComparePrivateFields enables Differ to compare private struct fields.
+// They are skipped by default, as it is not safe to apply patches with private fields: attempt to change
+// private struct field directly through reflection causes panic
+func ComparePrivateFields() func(d *Differ) error {
+	return func(d *Differ) error {
+		d.ComparePrivateFields = true
+		return nil
+	}
+}
+
 // FlattenEmbeddedStructs determines whether fields of embedded structs should behave as if they are directly under the parent
 func FlattenEmbeddedStructs() func(d *Differ) error {
 	return func(d *Differ) error {

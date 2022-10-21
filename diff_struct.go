@@ -54,10 +54,10 @@ func (d *Differ) diffStruct(path []string, a, b reflect.Value, parent interface{
 			continue
 		}
 
-		// skip private fields
-		//if !a.CanInterface() {
-		//	continue
-		//}
+		// skip private fields that are not safe to resolve
+		if !a.CanInterface() && (!d.ComparePrivateFields || isUnsafeInterface(a.Kind())) {
+			continue
+		}
 
 		err := d.diff(fpath, af, bf, exportInterface(a))
 		if err != nil {
