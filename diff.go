@@ -21,6 +21,10 @@ const (
 	UPDATE = "update"
 	// DELETE represents when an element has been removed
 	DELETE = "delete"
+
+	// DepthLimitReached shows that Differ reached maximum depth at specific point of diff calculation.
+	// This means, you can't tell the value is equal or not by given changelog item.
+	DepthLimitReached = "max_depth"
 )
 
 // DiffType represents an enum with all the supported diff types
@@ -226,6 +230,7 @@ func (d *Differ) Diff(a, b interface{}) (Changelog, error) {
 func (d *Differ) diff(path []string, a, b reflect.Value, parent interface{}) error {
 	if d.MaxDepth != 0 && len(path) > d.MaxDepth {
 		// Stop diff calculation when max depth reached
+		d.cl.Add(DepthLimitReached, path, nil, nil)
 		return nil
 	}
 
