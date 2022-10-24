@@ -87,6 +87,7 @@ type Differ struct {
 	ConvertCompatibleTypes bool
 	ComparePrivateFields   bool
 	Filter                 FilterFunc
+	MaxDepth               int
 }
 
 // Changelog stores a list of changed items
@@ -223,6 +224,10 @@ func (d *Differ) Diff(a, b interface{}) (Changelog, error) {
 }
 
 func (d *Differ) diff(path []string, a, b reflect.Value, parent interface{}) error {
+	if d.MaxDepth != 0 && len(path) > d.MaxDepth {
+		// Stop diff calculation when max depth reached
+		return nil
+	}
 
 	//look and see if we need to discard the parent
 	if parent != nil {
@@ -240,7 +245,7 @@ func (d *Differ) diff(path []string, a, b reflect.Value, parent interface{}) err
 		return ErrTypeMismatch
 	}
 
-	// get the diff type and the corresponding built-int diff function to handle this type
+	// get the diff type and the corresponding built-in diff function to handle this type
 	diffType, diffFunc := d.getDiffType(a, b)
 
 	// first go through custom diff functions

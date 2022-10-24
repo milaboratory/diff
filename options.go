@@ -18,6 +18,15 @@ func ComparePrivateFields() func(d *Differ) error {
 	}
 }
 
+// MaxDepth enables Differ to limit maximum depth of diff calculation.
+// Zero value disables the limit.
+func MaxDepth(depth int) func(d *Differ) error {
+	return func(d *Differ) error {
+		d.MaxDepth = depth
+		return nil
+	}
+}
+
 // FlattenEmbeddedStructs determines whether fields of embedded structs should behave as if they are directly under the parent
 func FlattenEmbeddedStructs() func(d *Differ) error {
 	return func(d *Differ) error {
