@@ -106,6 +106,14 @@ type Change struct {
 	parent interface{} `json:"parent"`
 }
 
+func (c *Change) ParentKind() reflect.Kind {
+	if c.parent == nil {
+		return reflect.Invalid
+	}
+
+	return reflect.ValueOf(c.parent).Kind()
+}
+
 // ValueDiffer is an interface for custom differs
 type ValueDiffer interface {
 	Match(a, b reflect.Value) bool
